@@ -1,37 +1,44 @@
 #!/usr/bin/env python3
 """
-0-basic_async_syntax.py
-
-An asynchronous coroutine that introduces the basic concepts of async and await.
-It waits for a random delay and returns the duration.
+Async Generator.
+This module defines a coroutine that loops 10 times, waits 1 second
+asynchronously, and then yields a random float between 0 and 10.
 """
 
 import asyncio
 import random
-from typing import (
-    Awaitable,
-    Union
-)
+from typing import AsyncGenerator
 
-
-async def wait_random(max_delay: int = 10) -> float:
+async def async_generator() -> AsyncGenerator[float, None]:
     """
-    Waits for a random delay between 0 and max_delay seconds and returns the delay.
+    Coroutine that yields a random number between 0 and 10 every second.
 
-    Args:
-        max_delay (int): The maximum number of seconds to wait (default is 10).
-
-    Returns:
-        float: The actual random delay waited.
+    The coroutine loops 10 times.
+    Each loop:
+    1. Asynchronously waits for 1 second using asyncio.sleep(1).
+    2. Yields a random floating-point number between 0 and 10.
+    
+    The function is type-annotated using AsyncGenerator[float, None].
     """
-    # Generate a random float delay between 0 and max_delay (inclusive)
-    # random.uniform is used to get a float value
-    delay: float = random.uniform(0, max_delay)
+    for _ in range(10):
+        # Asynchronously wait for 1 second
+        await asyncio.sleep(1)
+        
+        # Yield a random number between 0 and 10
+        yield random.uniform(0, 10)
 
-    # Use await asyncio.sleep() to pause the coroutine execution for the
-    # generated delay without blocking the entire thread.
-    # 
-    await asyncio.sleep(delay)
+# The following is for demonstration/testing and not strictly required for the task file itself,
+# but it shows how the coroutine is executed.
 
-    # Return the actual delay waited
-    return delay
+# async def print_yielded_values():
+#     result = []
+#     async for i in async_generator():
+#         result.append(i)
+#     print(result)
+
+# if __name__ == "__main__":
+#     import time
+#     start_time = time.time()
+#     asyncio.run(print_yielded_values())
+#     end_time = time.time()
+#     print(f"Total execution time: {end_time - start_time:.2f} seconds")
